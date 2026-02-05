@@ -1,0 +1,8 @@
+body {
+  background: pink;
+  margin: 0;
+  overflow: hidden;
+}
+canvas {
+  width: 100%;
+}
