@@ -1,6 +1,6 @@
 # Emergent Loops
 
-A generative visual piece exploring the emergent patterns that arise when polar and cartesian noise functions intersect. The work investigates how mathematical chaos can produce coherent, infinitely looping visual structures through careful layering of simplex noise across different coordinate systems.
+Emergent Loops is a generative visual piece exploring the emergent patterns that arise when polar and cartesian noise functions intersect. The work investigates how mathematical chaos can produce coherent, infinitely looping visual structures through careful layering of simplex noise across different coordinate systems.
 
 ## About
 
