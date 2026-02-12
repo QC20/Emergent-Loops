@@ -1,48 +1,63 @@
 # Emergent Loops
 
-Emergent Loops is a generative visual piece exploring the emergent patterns that arise when polar and cartesian noise functions intersect. The work investigates how mathematical chaos can produce coherent, infinitely looping visual structures through careful layering of simplex noise across different coordinate systems.
+<div align="center">
+  <img src="src/assets/Emergent_Loops_Demonstration.gif" alt="Emergent Loops animation demonstration" width="80%">
+  <p><em>Real-time generative animation showing the emergent patterns created by intersecting polar and cartesian noise functions</em></p>
+</div>
 
-## About
+## What This Is
 
-This piece uses WebGL fragment shaders to generate real-time animated patterns. By mapping 3D simplex noise onto both polar and cartesian coordinates simultaneously, the system creates organic striations that maintain perfect circular continuity while evolving through time. The result feels alive and rhythmic, like watching cells divide or waves propagate, but emerges purely from mathematical operations without any predefined forms.
+Emergent Loops explores what happens when you let different mathematical spaces collide. The piece generates infinite, organically evolving patterns by sampling 3D simplex noise through two coordinate systems simultaneously. One reading happens in polar space (radius and angle from a center point), while the other maps the same noise field through standard cartesian coordinates. The interference between these two perspectives creates striations that feel biological but emerge purely from the math.
 
-The visual language references natural phenomena like wood grain, water ripples, and interference patterns, but exists in its own synthetic space. Each viewing is unique as the time-based evolution creates new formations, though the underlying algorithmic structure ensures the patterns always loop seamlessly.
+The visual output references wood grain, rippling water, and cellular structures, but exists in its own territory. Each moment is unique as the patterns shift through time, yet the underlying structure ensures everything loops seamlessly. There are no predefined forms here. The coherence you see arises from the algorithm itself.
 
-## Technical Details
+## How It Works
 
-Built with WebGL 2.0 using the wtc-gl library for rendering pipeline management. The core technique involves sampling 3D simplex noise at positions determined by both polar coordinates (radius and angle) and screen-space cartesian coordinates. To achieve perfect circular looping, the angular component is mapped onto a circle using sine and cosine, allowing the noise to wrap continuously around the center point.
+The core technique involves a careful dance between coordinate systems. Standard fragment shaders typically sample noise using screen-space x and y coordinates. This piece adds polar coordinates to the mix, calculating radius and angle from the canvas center for each pixel. But here's where it gets interesting.
 
-The color separation effect comes from slightly offset phase sampling of the same underlying noise field, creating chromatic aberration-like fringes that enhance the sense of depth and movement.
+Polar coordinates have a problem when you want continuous loops. The angular component wraps at 2π, creating a discontinuity. To solve this, the angle gets mapped onto a circle in a higher dimensional space using sine and cosine. Instead of sampling noise at angle θ directly, the shader samples at (cos(θ), sin(θ)). This transforms the angular wraparound into smooth circular motion in the noise field, guaranteeing perfect continuity.
+
+The actual noise calculation happens in 3D simplex space. Simplex noise offers smooth gradients with less directional bias than Perlin noise, making it ideal for organic patterns. By combining polar-derived positions with cartesian offsets and a time component, each pixel queries a unique point in this three-dimensional field.
+
+Color separation emerges from phase-offset sampling. The red, green, and blue channels read from slightly different positions in the same noise field, creating chromatic fringes reminiscent of optical aberration. This adds depth and reinforces the sense that you're looking at something with internal structure rather than a flat pattern.
+
+WebGL 2.0 handles all computation on the GPU through fragment shaders, enabling real-time performance. The wtc-gl library manages the rendering pipeline, but the visual logic lives entirely in the shader code.
+
+## Customization Possibilities
+
+The noise sampling approach opens several routes for variation. Adjusting the frequency of the polar versus cartesian components shifts the balance between circular and linear patterns. Higher polar frequency creates tighter concentric structures, while emphasizing cartesian sampling produces more directional flow.
+
+The phase offset between color channels controls the chromatic separation. Increasing these offsets creates more pronounced color fringes, while reducing them toward zero collapses the palette into monochrome. You could also sample entirely different noise octaves for each channel, leading to patterns where color itself becomes an independent variable rather than a displacement artifact.
+
+Time scaling determines evolution speed. The current implementation uses a steady progression, but modulating time with additional functions (perhaps another noise layer or oscillation) would create rhythmic variations in the animation tempo. Alternatively, freezing time while allowing mouse interaction to scrub through the temporal dimension transforms the piece into an explorable space rather than a passive loop.
+
+Substituting different noise algorithms would fundamentally alter the character. Worley noise would shift the aesthetic toward cellular or crystalline structures. Fractional Brownian motion through octave layering could add fractal detail at multiple scales. Domain warping, where noise values distort the sampling coordinates for subsequent noise calls, introduces controlled chaos that can produce fluid or turbulent effects.
 
 ## Running Locally
 
-Clone the repository and serve the files using any local server. The project uses ES modules loaded from CDN, so it needs to run over HTTP rather than opening the HTML file directly.
+The project uses ES modules loaded from CDN, so you need to serve it over HTTP.
+
 ```bash
-# Using Python 3
 python -m http.server 8000
-
-# Using Node.js
-npx serve
-
-# Using PHP
-php -S localhost:8000
 ```
 
-Then navigate to `http://localhost:8000` in your browser.
+Navigate to `http://localhost:8000` in your browser. Requires WebGL 2.0 support (available in modern Chrome, Firefox, Safari, and Edge).
 
-## Browser Compatibility
+To clone this repository: `git clone https://github.com/yourusername/emergent-loops.git`
 
-Requires WebGL 2.0 support. Works in modern versions of Chrome, Firefox, Safari, and Edge. Performance is best on devices with dedicated GPUs.
+## Technical Stack
+
+- WebGL 2.0 fragment shaders
+- wtc-gl rendering library
+- 3D simplex noise (Ian McEwan and Stefan Gustavson implementation)
+- ES6 modules
 
 ## Credits
 
 Created by Jonas Kjeldmand Jensen, February 2026
 
-Simplex noise implementation by Ian McEwan and Stefan Gustavson  
-Rendering via wtc-gl library
-
-Original sketch inspiration from CodePen experiments in procedural generation
+Simplex noise implementation by Ian McEwan and Stefan Gustavson
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License
